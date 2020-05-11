@@ -53,11 +53,11 @@ var classify = {
           newMLArr.push({ name: Data[i].class, score: Data[i].score });
         }
         console.log(newMLArr);
-        res.send({"Status": 200, "Data": newMLArr});
+        res.send({ Status: 200, Data: newMLArr });
       })
       .catch((err) => {
         console.log("error:", err);
-        res.send({"Status": 500, "Data": err});
+        res.send({ Status: 500, Data: err });
       });
   },
   camera_upload: function (req, res) {
@@ -71,7 +71,8 @@ var classify = {
       .classify(classifyParams)
       .then((response) => {
         console.log(response);
-        const classifiedImages = response.result.images[0].classifiers[0].classes;;
+        const classifiedImages =
+          response.result.images[0].classifiers[0].classes;
         return classifiedImages;
       })
       .then(function (Data) {
@@ -81,11 +82,11 @@ var classify = {
           newMLArr.push({ name: Data[i].class, score: Data[i].score });
         }
         console.log(newMLArr);
-        res.send({"Status": 200, "Data": newMLArr});
+        res.send({ Status: 200, Data: newMLArr });
       })
       .catch((err) => {
         console.log("error:", err);
-        res.send({"Status": 500, "Data": err});
+        res.send({ Status: 500, Data: err });
       });
   },
 };

@@ -6,15 +6,29 @@ require("dotenv").config(); // import API KEY
 function parseResult(quantity, size, name) {
   return quantity + "%20" + size + "%20" + name;
 }
-
 var foodAPI = {
-  get_nutrients: async function (req, res) {
+  get_nutrients: function (req, res) {
+    console.log(req.body);
     const query = parseResult(req.body.quantity, req.body.size, req.body.name);
-    await fetch(
+    console.log(query);
+    // query = "1%20large%20crepe";
+    fetch(
       `https://api.edamam.com/api/nutrition-data?app_id=${process.env.FOOD_ID}&app_key=${process.env.FOOD_KEY}&ingr=${query}`
     )
-      .then((res) => res.text())
-      .then((body) => console.log(body));
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        NutrientInfo = data["totalNutrients"];
+        TotalCalories = data["calories"];
+        TotalWeight = data["totalWeight"]; 
+        DietLabel = data["dietLabels"];
+        res.send({"yield":data["yield"],"calorie": TotalCalories, "weight": TotalWeight, "diet": DietLabel, "nutrient": NutrientInfo});
+      })
+      .catch(error=>{
+        res.send({"yield":0,"calorie": 0, "weight": 0, "diet": null, "nutrient": error});
+      })
   },
 };
 module.exports = foodAPI;

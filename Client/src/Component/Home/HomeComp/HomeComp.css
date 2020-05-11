@@ -8,8 +8,15 @@
     border-radius: 15px;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
     width: auto;
-    height: 100px;
+    height: auto;
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+    -webkit-transform: scale(1);
+    transform: scale(1);
 }
+.ui.segment.results-segment:hover {
+    transform: scale(1.1) perspective(1px);
+  }
 .score-div{
     margin-top: 2em;
 }
@@ -24,3 +31,38 @@
 .ui.header.Main_Header{
     font-size: 3em;
 }
+.ui.header.small_Header{
+    margin-top: 0em;
+}
+.rec-div{
+    margin-top: 3em;
+}
+
+/*Nutrition Segment*/
+.ui.segment.calorie-segment{
+    border-radius: 15px;
+    width: 600px;
+}
+.nut-div{
+    margin-top: 3em;
+}
+.ui.header.Nutrition-Facts{
+    font-size: 2em;
+    font-weight: 800;
+}
+.ui.header.nutriton-start{
+    font-size: 1em;
+    margin-top: 1em;
+}
+
+/*Calorie Grid*/
+.cal-info{
+    display:flex;
+    flex-direction:row;
+justify-content: space-between;
+}
+.f{
+    display:flex;
+    flex-direction:column;
+}
+
