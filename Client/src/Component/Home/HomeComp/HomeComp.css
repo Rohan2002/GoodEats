@@ -1,0 +1,26 @@
+.mainhome
+{
+    height: 100vh;
+    background-color: #3bd16f;
+}
+/*Result Segment*/
+.ui.segment.results-segment{
+    border-radius: 15px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    width: auto;
+    height: 100px;
+}
+.score-div{
+    margin-top: 2em;
+}
+.ui.header{
+    font-family: "Titillium Web";
+    color:#333333;
+}
+.inner-home{
+    padding-top: 5em;
+    padding-left: 5em;
+}
+.ui.header.Main_Header{
+    font-size: 3em;
+}
