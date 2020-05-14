@@ -6,6 +6,20 @@ require("dotenv").config(); // import API KEY
 function parseResult(quantity, size, name) {
   return quantity + "%20" + size + "%20" + name;
 }
+function parseArray(arr) {
+  arr_new = [];
+  for (var i = 0; i < arr.length; i++) {
+    var element = arr[i].replace("_", " ");
+    var capitalze = element
+      .toLowerCase()
+      .split(" ")
+      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+      .join(" ");
+    arr_new.push(capitalze);
+  }
+  return arr_new;
+}
+// console.log(parseArray(["San_diego", "tokyo_Sk"]));
 var foodAPI = {
   get_nutrients: function (req, res) {
     console.log(req.body);
@@ -22,13 +36,29 @@ var foodAPI = {
         console.log(data);
         NutrientInfo = data["totalNutrients"];
         TotalCalories = data["calories"];
-        TotalWeight = data["totalWeight"]; 
-        DietLabel = data["dietLabels"];
-        res.send({"yield":data["yield"],"calorie": TotalCalories, "weight": TotalWeight, "diet": DietLabel, "nutrient": NutrientInfo});
+        TotalWeight = data["totalWeight"];
+        DietLabel = parseArray(data["dietLabels"]);
+        HealthLabel = parseArray(data["healthLabels"]);
+        Cautions = parseArray(data["cautions"]);
+        res.send({
+          HealthLabel: HealthLabel,
+          Cautions: Cautions,
+          yield: data["yield"],
+          calorie: TotalCalories,
+          weight: TotalWeight,
+          diet: DietLabel,
+          nutrient: NutrientInfo,
+        });
       })
-      .catch(error=>{
-        res.send({"yield":0,"calorie": 0, "weight": 0, "diet": null, "nutrient": error});
-      })
+      .catch((error) => {
+        res.send({
+          yield: 0,
+          calorie: 0,
+          weight: 0,
+          diet: null,
+          nutrient: error,
+        });
+      });
   },
 };
 module.exports = foodAPI;

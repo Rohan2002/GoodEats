@@ -1,97 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import "./HomeComp.css";
 import { instanceOf } from "prop-types";
 import { withCookies, Cookies } from "react-cookie";
 import { withRouter } from "react-router-dom";
-import {
-  Header,
-  Grid,
-  Segment,
-  Divider,
-  Container,
-  GridRow,
-} from "semantic-ui-react";
+import { Header, Grid, Segment, Dimmer, Loader } from "semantic-ui-react";
 import axios from "axios";
-
-const CalorieSeg = (props) => {
-  const api_data = props.objectArr;
-  const NutrietArr =
-    api_data["nutrient"] === undefined
-      ? []
-      : Object.values(api_data["nutrient"]);
-
-  
-  const slicer = (NutrietArr.length / 2) | 0;
-  const NutrietArrFirst = NutrietArr.splice(0, slicer);
-  const NutrietArrSecond = NutrietArr;
-  return (
-    <Segment className={"calorie-segment"}>
-      <div>
-        <Header className={"Nutrition-Facts"}>Nutrition Facts</Header>
-      </div>
-      <div>
-        <Header className={"nutriton-start"}>
-          Serving Size {props.quantity} {props.name}{" "}
-          {api_data === undefined ? 0 : api_data["weight"]} grams
-          <br />
-          Servings Per container{" "}
-          {api_data === undefined ? "None" : api_data["yield"]}
-        </Header>
-      </div>
-      <Divider />
-      <div>
-        Calories {api_data === undefined ? "None" : api_data["calorie"]}
-      </div>
-      <Divider />
-      <Grid columns={2} stackable={true} relaxed="very">
-        <Grid.Column>
-          <Grid.Row>
-            {NutrietArrFirst.map((Element,index) => {
-              return (
-                <>
-                <div key={index} className={"cal-info"}>
-                  <div>
-                    <Header className={"f"}>{Element.label}</Header>
-                  </div>
-                  <div className={"f"}>
-                    <Header>
-                      {Element.quantity.toFixed(2)} {Element.unit}
-                    </Header>
-                  </div>
-                </div>
-                <Divider/>
-                </>
-              );
-            })}
-          </Grid.Row>
-        </Grid.Column>
-        <Grid.Column>
-          <Grid.Row>
-            {NutrietArrSecond.map((Element2,index) => {
-              return (
-                <>
-                <div key={index} className={"cal-info"}>
-                  <div>
-                    <Header className={"f"}>{Element2.label}</Header>
-                  </div>
-                  <div className={"f"}>
-                    <Header>
-                      {Element2.quantity.toFixed(2)} {Element2.unit}
-                    </Header>
-                  </div>
-                </div>
-                <Divider/>
-                </>
-              );
-            })}
-          </Grid.Row>
-        </Grid.Column>
-      </Grid>
-      <Divider vertical></Divider>
-    </Segment>
-  );
-};
-
+import CalorieSeg from "./HomeComps/CalorieSegment";
+import ModalParam from "./HomeComps/ModalSelect";
+import HealthLabel from './HomeComps/HealthLabel';
 class HomeComp extends React.Component {
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired,
@@ -106,7 +22,9 @@ class HomeComp extends React.Component {
       calorieLoad: -1,
       CalorieData: {},
       NutrientData: [],
-      NutrientAPIParam: { quantity: 1, size: "large" },
+      NutrientAPIParamQuantity: 1,
+      NutrientAPIParamSize: "",
+      ModalStatus: true,
     };
   }
 
@@ -120,10 +38,17 @@ class HomeComp extends React.Component {
       CookieData.Data === undefined
     ) {
       this.props.history.push("/upload");
+    } else if (CookieData.Status === 500) {
+      alert("Image not processed! ");
+      this.setState({ Status: CookieData.Status });
+      this.setState({ Data: [] }, () => {
+        console.log("Empty");
+      });
+      this.setState({ DataLength: 0 });
     } else {
       this.setState({ Status: CookieData.Status });
       this.setState({ Data: CookieData.Data }, () => {
-        console.log(this.state.Data);
+        console.log("Filled");
       });
       this.setState({ DataLength: CookieData.Data.length });
     }
@@ -133,30 +58,60 @@ class HomeComp extends React.Component {
     const pointer = this;
     await axios
       .post("http://localhost:8080/api/foodSelect", {
-        quantity: this.state.NutrientAPIParam.quantity,
-        size: this.state.NutrientAPIParam.size,
+        quantity: pointer.state.NutrientAPIParamQuantity,
+        size: pointer.state.NutrientAPIParamSize,
         name: pointer.state.SelectedFood,
       })
       .then(function (response) {
         return response;
       })
       .then(function (data) {
-        console.log(data.data.calorie);
+        pointer.setState({ calorieLoad: 0 });
         pointer.setState({ CalorieData: data.data }, () =>
           console.log(pointer.state.CalorieData)
         );
       })
       .catch(function (error) {
+        pointer.setState({ calorieLoad: 0 });
         console.log(error);
       });
   }
+  close = () => this.setState({ ModalStatus: false });
   onClickHandler(name) {
-    this.setState({ SelectedFood: name }, () => {
-      this.getCalorieInfo();
-      this.setState({ calorieLoad: 1 });
-    });
+    this.setState({ SelectedFood: name });
   }
+  onSubmitModal = (e) => {
+    e.preventDefault();
+    // console.log(this.state.SelectedFood, this.state.NutrientAPIParamQuantity,this.state.NutrientAPIParamSize);
+    this.getCalorieInfo();
+    this.setState({ calorieLoad: 1 });
+  };
   render() {
+    const Results = (result) => {
+      return (
+        <Segment
+          onClick={() => this.onClickHandler(result.name)}
+          className={"results-segment"}
+        >
+          <div>
+            <Header className={"result-header"}>Name: {result.name}</Header>
+          </div>
+          <div className={"score-div"}>
+            <Header className={"result-header"}>
+              Probability: {(result.score * 100).toFixed(2)}%
+            </Header>
+          </div>
+        </Segment>
+      );
+    };
+
+    const LoaderComp = () => {
+      return (
+        <Dimmer active>
+          <Loader content="Loading" />
+        </Dimmer>
+      );
+    };
     return (
       <div className={"mainhome container"}>
         <div className={"inner-home"}>
@@ -169,24 +124,26 @@ class HomeComp extends React.Component {
             <div className={"rec-div"}>
               <Grid columns={this.state.DataLength + 1} stackable={true}>
                 <Grid.Row>
-                  {this.state.Data.map((result) => {
+                  {this.state.Data.map((result, index) => {
                     return (
-                      <Grid.Column>
-                        <Segment
-                          onClick={() => this.onClickHandler(result.name)}
-                          className={"results-segment"}
-                        >
-                          <div>
-                            <Header className={"result-header"}>
-                              Name: {result.name}
-                            </Header>
-                          </div>
-                          <div className={"score-div"}>
-                            <Header>
-                              Probability: {(result.score * 100).toFixed(2)}%
-                            </Header>
-                          </div>
-                        </Segment>
+                      <Grid.Column key={index}>
+                        <ModalParam
+                          loadComp={
+                            this.state.calorieLoad === 1 ? LoaderComp() : null
+                          }
+                          onChangeServe={(e) =>
+                            this.setState({
+                              NutrientAPIParamQuantity: e.target.value,
+                            })
+                          }
+                          onChangeSize={(e) =>
+                            this.setState({
+                              NutrientAPIParamSize: e.target.value,
+                            })
+                          }
+                          onSubmitModal={this.onSubmitModal}
+                          component={Results(result)}
+                        ></ModalParam>
                       </Grid.Column>
                     );
                   })}
@@ -197,14 +154,25 @@ class HomeComp extends React.Component {
 
           {/*Starting Nutrition*/}
           <div className={"nut-div"}>
-            <Header className={"Main_Header"}>Nutrition Results</Header>
-
-            <CalorieSeg
-              quantity={this.state.NutrientAPIParam.quantity}
-              name={this.state.SelectedFood}
-              weight={10}
-              objectArr={this.state.CalorieData}
-            />
+            
+            <Grid stackable={true}>
+              <Grid.Row columns={3}>
+              
+                <Grid.Column>
+                <Header className={"Main_Header"}>Nutrition Results</Header>
+                  <CalorieSeg
+                    quantity={this.state.NutrientAPIParamQuantity}
+                    name={this.state.SelectedFood}
+                    weight={10}
+                    objectArr={this.state.CalorieData}
+                  />
+                </Grid.Column>
+                <Grid.Column>
+                <Header className={"Main_Header"}>Health Labels</Header>
+                 <HealthLabel HealthArray={this.state.CalorieData} DietArray={this.state.CalorieData} CautionArray={this.state.CalorieData}/>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
           </div>
         </div>
       </div>

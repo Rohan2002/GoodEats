@@ -13,14 +13,16 @@ import {
 } from "semantic-ui-react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-
+import { useHistory } from "react-router-dom";
 import "./Upload.css";
 const CameraUpload = () => {
   const [load, setLoad] = useState(-1);
   const [screenshot, setscreenshot] = useState(null);
   const [cookies, setCookie] = useCookies(["Data"]);
-  
+  let history = useHistory();
+
   async function sendScreenShot(data) {
+    
     const response = await axios.post("http://localhost:8080/api/uploadCamera", { Data: data })
     console.log(response);
     try{
@@ -28,18 +30,20 @@ const CameraUpload = () => {
       console.log(res_data);
       setCookie('Data', res_data, { path: '/', maxAge:3600 }); // set cookie
       setLoad(0); // set load to 0
-      
+      history.push('/');  
     }
     catch(error){
       console.log(error);
     }
-    this.props.history.push('/');
+    
   };
 
   // Onclick handler for sending pic to the backend
 
   const WebcamCapture = () => {
-    const onSubmitHandler = (event) =>{ 
+
+
+    const onSubmitHandler =  event =>{ 
       event.preventDefault();
       sendScreenShot(screenshot);
       setLoad(1);
