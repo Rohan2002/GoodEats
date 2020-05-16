@@ -1,11 +1,11 @@
 .mainhome
 {
-    height: 100vh;
+    height: 150vh;
     background-color: #3bd16f;
 }
 /*Result Segment*/
 .ui.segment.results-segment{
-    border-radius: 15px;
+    border-radius: 10px;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
     width: auto;
     height: auto;
@@ -37,7 +37,9 @@
 .rec-div{
     margin-top: 3em;
 }
-
+.ui.header.result-header{
+    white-space: nowrap     ;
+}
 /*Nutrition Segment*/
 .ui.segment.calorie-segment{
     border-radius: 15px;
@@ -66,3 +68,10 @@ justify-content: space-between;
     flex-direction:column;
 }
 
+/*nut card*/
+.top-nut-div{
+    margin-top: 1em;
+}
+.ui.header.top-nut{
+    margin-top: -0.5em;
+}
