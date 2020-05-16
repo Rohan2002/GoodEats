@@ -1,12 +1,13 @@
-const VisualRecognitionV3 = require("ibm-watson/visual-recognition/v3");
-const { IamAuthenticator } = require("ibm-watson/auth");
+/* eslint-disable no-plusplus */
+const VisualRecognitionV3 = require('ibm-watson/visual-recognition/v3');
+const { IamAuthenticator } = require('ibm-watson/auth');
 
 // 9b98de65b9fa7232eb31b692820bd7f8
 // ed04ca16
-const fs = require("fs");
-const uuidv4 = require("uuid/v4");
+const fs = require('fs');
+const uuidv4 = require('uuid/v4');
 
-require("dotenv").config(); // import API KEY
+require('dotenv').config(); // import API KEY
 
 // Business Logic to Parse and Read File
 function createFile(ImageData) {
@@ -14,58 +15,57 @@ function createFile(ImageData) {
   fs.writeFile(
     `./uploads/camera-uploads/${fileName}`,
     ImageData,
-    "base64",
+    'base64',
     (err) => {
       if (err) {
         console.log(err);
       } else {
-        console.log("File Created at " + new Date());
+        console.log('File Created at ', new Date());
       }
-    }
+    },
   );
   return `uploads/camera-uploads/${fileName}`;
 }
 
 const visualRecognition = new VisualRecognitionV3({
-  version: "2018-03-19",
+  version: '2018-03-19',
   authenticator: new IamAuthenticator({
     apikey: process.env.IBMKEY,
   }),
   url: process.env.IBMURL,
 });
 
-var classify = {
-  find_upload: function (req, res) {
+const classify = {
+  find_upload(req, res) {
     const classifyParams = {
       imagesFile: fs.createReadStream(req.file.path),
-      classifierIds: ["food"],
+      classifierIds: ['food'],
     };
     visualRecognition
       .classify(classifyParams)
       .then((response) => {
-        const classifiedImages =
-          response.result.images[0].classifiers[0].classes;
+        const classifiedImages = response.result.images[0].classifiers[0].classes;
         return classifiedImages;
       })
-      .then(function (Data) {
-        var newMLArr = [];
-        for (var i = 0; i < Data.length; i++) {
+      .then((Data) => {
+        const newMLArr = [];
+        for (let i = 0; i < Data.length; i++) {
           newMLArr.push({ name: Data[i].class, score: Data[i].score });
         }
         console.log(newMLArr);
         res.send({ Status: 200, Data: newMLArr });
       })
       .catch((err) => {
-        console.log("error:" + err);
+        console.log(`error:${err}`);
         res.send({ Status: 500, Data: err });
       });
   },
-  camera_upload: function (req, res) {
-    var base64Data = req.body.Data.replace("data:image/jpeg;base64,", "");
-    const file_create = createFile(base64Data);
+  camera_upload(req, res) {
+    const base64Data = req.body.Data.replace('data:image/jpeg;base64,', '');
+    const fileCreate = createFile(base64Data);
     const classifyParams = {
-      imagesFile: fs.createReadStream(file_create),
-      classifierIds: ["food"],
+      imagesFile: fs.createReadStream(fileCreate),
+      classifierIds: ['food'],
     };
     visualRecognition
       .classify(classifyParams)
@@ -74,17 +74,17 @@ var classify = {
         const classifiedImages = response.result.images[0].classifiers[0].classes;
         return classifiedImages;
       })
-      .then(function (Data) {
+      .then((Data) => {
         console.log(Data);
-        var newMLArr = [];
-        for (var i = 0; i < Data.length; i++) {
+        const newMLArr = [];
+        for (let i = 0; i < Data.length; i++) {
           newMLArr.push({ name: Data[i].class, score: Data[i].score });
         }
         console.log(newMLArr);
         res.send({ Status: 200, Data: newMLArr });
       })
       .catch((err) => {
-        console.log("error:" + err);
+        console.log(`error:${err}`);
         res.send({ Status: 500, Data: err });
       });
   },
