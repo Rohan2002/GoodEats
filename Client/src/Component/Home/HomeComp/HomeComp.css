@@ -1,7 +1,7 @@
 .mainhome
 {
     height: 150vh;
-    background-color: #3bd16f;
+    background-color: #F6F6F6;
 }
 /*Result Segment*/
 .ui.segment.results-segment{
@@ -74,4 +74,8 @@ justify-content: space-between;
 }
 .ui.header.top-nut{
     margin-top: -0.5em;
+}
+/* HealthLabel */
+.label-div{
+    margin-top: 1em;
 }

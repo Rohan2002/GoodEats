@@ -1,0 +1,15 @@
+.main-header {
+  padding-top: 3em;
+  padding-bottom: 3em;
+}
+.second-part {
+  color: #50b77b;
+}
+.ui.header.main-header-style {
+  color: black;
+  font-size: 4em;
+}
+.main-form {
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
