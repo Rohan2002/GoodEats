@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Header, Form, Button, Message } from 'semantic-ui-react';
+import { Header, Form, Button, Message, Dimmer,Loader } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 import './Login.css';
 class Login extends React.Component {
@@ -39,6 +39,12 @@ class Login extends React.Component {
     return (
       <>
         <div className={'main-header container'}>
+        {this.state.loader == 1 ? (
+          <Dimmer active>
+            {' '}
+            <Loader />{' '}
+          </Dimmer>
+        ) : null}
           <Header className={'main-header-style'}>
             Login to <span className={'second-part'}>your account</span>
           </Header>

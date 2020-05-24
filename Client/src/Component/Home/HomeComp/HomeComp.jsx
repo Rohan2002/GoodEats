@@ -14,7 +14,7 @@ import axios from 'axios';
 import CalorieSeg from './HomeComps/CalorieSegment';
 import ModalParam from './HomeComps/ModalSelect';
 import HealthLabel from './HomeComps/HealthLabel';
-
+import TopNav from '../../TopNav/TopNav';
 class HomeComp extends React.Component {
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired,
@@ -118,6 +118,7 @@ class HomeComp extends React.Component {
     );
     return (
       <div className="mainhome container">
+        <TopNav/>
         <div className="inner-home">
           {/* Starting Image Recognition */}
           <div>
