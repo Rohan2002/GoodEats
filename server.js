@@ -1,13 +1,16 @@
+/* eslint-disable no-console */
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const router = require('./routes/index');
 
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
+app.use(cookieParser());
 app.use(cors());
 app.use(logger('dev'));
 

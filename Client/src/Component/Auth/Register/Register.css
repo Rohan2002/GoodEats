@@ -1,0 +1,32 @@
+.main-header {
+  padding-top: 3em;
+  padding-bottom: 3em;
+}
+.ui.button.form-button {
+  white-space: nowrap;
+  z-index: 1;
+  font-size: 1.5em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: white;
+  width: auto;
+  padding: 10px 40px;
+  background: #fe574e;
+  border-radius: 20px;
+  font-family: 'Titillium Web';
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}
+.ui.button.form-button:hover {
+  transform: scale(1.1) perspective(1px);
+}
+.ui.header.sign-in {
+  color: black;
+  font-family: 'Titillium Web';
+}
+.label-div{
+  display: inline-block;
+  
+}

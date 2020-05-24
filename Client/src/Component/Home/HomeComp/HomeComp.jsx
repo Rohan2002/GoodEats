@@ -19,7 +19,6 @@ class HomeComp extends React.Component {
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired,
   };
-
   constructor(props) {
     super(props);
     this.state = {

@@ -5,6 +5,7 @@
 /* eslint-disable react/static-property-placement */
 import React from 'react';
 import axios from 'axios';
+import TopNav from "../TopNav/TopNav";
 import {
   Progress,
   Segment,
@@ -95,7 +96,10 @@ class Upload extends React.Component {
 
   render() {
     return (
+      <>
+      <TopNav/>
       <section className="uploadmain">
+        
         <div className="uploadseg container">
           {this.state.loading_send === 1 ? (
             <Dimmer active>
@@ -163,6 +167,7 @@ class Upload extends React.Component {
           </Grid>
         </div>
       </section>
+      </>
     );
   }
 }

@@ -23,16 +23,13 @@ function parseArray(arr) {
 // console.log(parseArray(['San_diego', 'tokyo_Sk']));
 const foodAPI = {
   get_nutrients(req, res) {
-    console.log(req.body);
     const query = parseResult(req.body.quantity, req.body.size, req.body.name);
-    console.log(query);
-    // query = '1%20large%20crepe';
+    // format: query = '1%20large%20crepe';
     fetch(
       `https://api.edamam.com/api/nutrition-data?app_id=${process.env.FOOD_ID}&app_key=${process.env.FOOD_KEY}&ingr=${query}`,
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         const NutrientInfo = data.totalNutrients;
         const TotalCalories = data.calories;
         const TotalWeight = data.totalWeight;

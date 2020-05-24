@@ -1,6 +1,6 @@
 .uploadmain {
-  height: 150vh;
-  background-color: #3bd16f;
+  min-height: 100vh;
+  background-color: #F6F6F6;
 }
 .uploadseg {
   text-align: center;
@@ -36,7 +36,7 @@
   width: auto;
   padding: 15px 40px;
   border: none;
-  background: #3bd16f;
+  background: #50B77B;
   border: none;
   border-radius: 10px;
   transition: 0.5s;
@@ -93,7 +93,7 @@
   width: auto;
   padding: 15px 20px;
   border: none;
-  background: #0EE98B;
+  background: #50B77B;
   border: none;
   border-radius: 10px;
   transition: 0.5s;
@@ -127,7 +127,7 @@
   width: auto;
   padding: 15px 40px;
   border: none;
-  background: #3bd16f;
+  background: #50B77B;
   border: none;
   border-radius: 10px;
   transition: 0.5s;

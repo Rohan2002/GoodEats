@@ -1,8 +1,6 @@
 import React from 'react';
 import './sidebar.css';
-import {
-  Icon, Menu, Segment, Sidebar,
-} from 'semantic-ui-react';
+import { Icon, Menu, Segment, Sidebar } from 'semantic-ui-react';
 // import HomeComp from "../Home/HomeComp/HomeComp";
 
 const SideBar = (props) => (
@@ -14,18 +12,18 @@ const SideBar = (props) => (
         icon="labeled"
         inverted
         vertical
-        visible
+        visible={true}
         width="thin"
+        className={'sidebar-main'}
       >
-        <Icon size="huge" className="offonn" name="power" />
         <div className="side-bar-route">
           <Menu.Item href="/#/" as="a">
-            <Icon name="dashboard" />
-            Home
+            <Icon name="home" />
+            Food Dashboard
           </Menu.Item>
           <Menu.Item href="/#/upload" as="a">
-            <Icon name="setting" />
-            Upload
+            <Icon name="search" />
+            Food Inspect
           </Menu.Item>
           <Menu.Item as="a">
             <Icon name="info" />
