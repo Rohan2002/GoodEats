@@ -22,10 +22,10 @@ function parseArray(arr) {
 }
 // console.log(parseArray(['San_diego', 'tokyo_Sk']));
 const foodAPI = {
-  get_nutrients(req, res) {
+  async get_nutrients(req, res) {
     const query = parseResult(req.body.quantity, req.body.size, req.body.name);
     // format: query = '1%20large%20crepe';
-    fetch(
+    await fetch(
       `https://api.edamam.com/api/nutrition-data?app_id=${process.env.FOOD_ID}&app_key=${process.env.FOOD_KEY}&ingr=${query}`,
     )
       .then((response) => response.json())

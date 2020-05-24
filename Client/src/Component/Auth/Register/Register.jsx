@@ -16,6 +16,7 @@ class Register extends React.Component {
     super(props);
     this.state = {
       message: 'Loading...',
+      name: '',
       email: '',
       password: '',
       age: 0,
@@ -31,6 +32,7 @@ class Register extends React.Component {
     const pointer = this;
     await axios
       .post('http://localhost:8080/api/register', {
+        name: this.state.name,
         email: this.state.email,
         password: this.state.password,
         age: this.state.age,
@@ -56,7 +58,7 @@ class Register extends React.Component {
     console.log(this.state.showErr);
     return (
       <div className={'main-header'}>
-        {this.state.loader == 0 ? (
+        {this.state.loader == 1 ? (
           <Dimmer active>
             {' '}
             <Loader />{' '}
@@ -68,6 +70,13 @@ class Register extends React.Component {
 
         <Form onSubmit={this.onSubmit}>
           <div className={'main-form'}>
+          <Form.Input
+              onChange={(e) => this.setState({ name: e.target.value })}
+              label="Full Name"
+              type="text"
+              autoComplete="on"
+              required
+            />
             <Form.Input
               onChange={(e) => this.setState({ email: e.target.value })}
               label="Email"
