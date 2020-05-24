@@ -30,11 +30,10 @@ const authService = {
     });
   },
   async register(req, res) {
-    const {
-      email, password, age, height, weight,
-    } = req.body;
+    const { email, password, age, height, weight } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const sql = 'INSERT INTO users(email, password, age, weight, height,last_online_date) VALUES ?';
+    const sql =
+      'INSERT INTO users(email, password, age, weight, height,last_online_date) VALUES ?';
     const Value = [[[email, hashedPassword, age, weight, height, new Date()]]];
     pool.query(sql, Value, (error, result) => {
       if (error) {
@@ -50,15 +49,30 @@ const authService = {
   },
   async login(req, res) {
     const { email, password } = req.body;
-    // const comparision = await bcrypt.compare(password, results[0].password)
-    if (email == 'r@g.com' && password == 'r') {
-      const accessToken = generateAccessToken({ email });
-      const refreshToken = jwt.sign(email, process.env.SECRET_KEY);
-      refreshTokens.push(refreshToken);
-      res.json({ accessToken, refreshToken });
-      accessMainToken = accessToken;
-    }
-    return 'error';
+    const sql = 'SELECT * FROM USERS WHERE email = ?';
+    const param = [[[email]]];
+    pool.query(sql, param, (error, result) => {
+      if (error) {
+        res.sendStatus(500);
+      } else {
+        const sqlPassword = result[0].password;
+        bcrypt.compare(
+          password,
+          sqlPassword,
+          (err, check) => {
+            if (check == true) {
+              const accessToken = generateAccessToken({ email });
+              const refreshToken = jwt.sign(email, process.env.SECRET_KEY);
+              refreshTokens.push(refreshToken);
+              res.json({ accessToken, refreshToken });
+              accessMainToken = accessToken;
+            } else {
+              res.sendStatus(500);
+            }
+          },
+        );
+      }
+    });
   },
   showToken() {
     return accessMainToken;
