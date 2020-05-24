@@ -1,55 +1,41 @@
 import React from 'react';
 import axios from 'axios';
 import { Header, Form, Button, Message } from 'semantic-ui-react';
-import { Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import './Login.css';
-export default class Login extends React.Component {
+class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      message: 'Loading...',
-      login: false,
       email: '',
       password: '',
-      Register_Flag: -1,
+      loading: -1,
+      showErr: false,
     };
   }
-  sendLogin = () => {
-    axios
-      .post('http://localhost:8080/api/authenticate', {
+  async sendLogin() {
+    const pointer = this;
+    await axios
+      .post('http://localhost:8080/api/login', {
         email: this.state.email,
         password: this.state.password,
       })
-      .then((res) => {
+      .then(function (res) {
         if (res.status === 200) {
-          this.setState({ Register_Flag: 1 });
+          pointer.setState({ loading: 0 });
+          pointer.setState({ showErr: false });
+          pointer.props.history.push('/upload');
         }
       })
-      .catch((err) => {
-        if (err) {
-          this.setState({ Register_Flag: 0 });
-        }
+      .catch(function (error) {
+        pointer.setState({ showErr: true });
       });
-  };
+  }
   onSubmit = () => {
     this.sendLogin();
+    this.setState({ loading: 1 });
   };
   render() {
-    const isLoggedIn = this.state.Register_Flag;
-    console.log(isLoggedIn);
-    let button;
-    if (isLoggedIn === 0) {
-      button = (
-        <Message
-          error
-          header="Action Forbidden"
-          content="Wrong email or password"
-        />
-      );
-    }
-    if (isLoggedIn === 1) {
-      return <Redirect to="/"></Redirect>;
-    }
     return (
       <>
         <div className={'main-header container'}>
@@ -79,9 +65,16 @@ export default class Login extends React.Component {
               Log in
             </Button>
           </Form>
-          {button}
+          {this.state.showErr === true ? (
+            <Message
+              error
+              header="Action Forbidden"
+              content="Wrong email or password"
+            />
+          ) : null}
         </div>
       </>
     );
   }
 }
+export default withRouter(Login);

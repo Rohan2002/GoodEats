@@ -1,12 +1,8 @@
 /* eslint-disable no-plusplus */
 const VisualRecognitionV3 = require('ibm-watson/visual-recognition/v3');
 const { IamAuthenticator } = require('ibm-watson/auth');
-
-// 9b98de65b9fa7232eb31b692820bd7f8
-// ed04ca16
 const fs = require('fs');
 const uuidv4 = require('uuid/v4');
-
 require('dotenv').config(); // import API KEY
 
 // Business Logic to Parse and Read File
